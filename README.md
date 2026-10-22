@@ -1,23 +1,25 @@
-# Base de Datos de Albergues do Camiño de Santiago
+**Ejercicio 1**
+**Autor:Marco**
 
-## Como arrancar o proxecto
 
-1. Clona este repositorio na túa máquina.
-2. Crea unha copia do ficheiro de variables de contorno:
-   `cp .env.example .env`
-3. Edita o ficheiro `.env` e configura un contrasinal real.
-4. Levanta os contedores co comando:
-   `docker compose up -d`
-5. Accede a Adminer a través de `http://localhost:8080`. (O servidor por defecto é `db`).
 
-## Proba de Persistencia
+**Cómo arrancar el proyecto**
+1. Clona este repositorio en tu equipo.
+2. Haz una copia del archivo de variables de entorno:
+   cp .env.example .env
+3. Abre el .env y ponle la contraseña que prefieras.
+4. Levanta todo ejecutando el comando:
+   **docker compose up -d**
+5. Entra en http://localhost:8080. Para iniciar sesión, el servidor que tienes que indicar es db.
 
-| Paso | Comando | Resultado obtido |
+**Prueba de persistencia**
+
+| Paso | Comando | Resultado obtenido |
 |---|---|---|
-| 1 | `docker compose up -d` | Os contedores créanse e inícianse. Execútanse os scripts SQL ao ser a primeira vez. |
-| 2 | Inserir un albergue novo desde Adminer | O albergue gárdase correctamente na base de datos. |
-| 3 | `docker compose down` e `docker compose up -d` | Os contedores destrúense e vólvense a crear. Ao entrar en Adminer, **o albergue novo segue aí** porque o volume conservou os datos. |
-| 4 | `docker compose down -v` e `docker compose up -d` | Os contedores e os volumes destrúense. Ao volver levantar o proxecto, **o albergue novo xa non está**. A base de datos restaurouse ao seu estado inicial cos 8 albergues por defecto. |
+| 1 | **docker compose up -d* | Todo arranca bien y se crean los 8 albergues que metí en los scripts de inicio. |
+| 2 | Insertar en Adminer | Guardé un albergue inventado desde la web sin problemas. |
+| 3 | **docker compose down** y luego **docker compose up -d** | Mi albergue inventado(Albergue O corgo) sigue ahí, no se perdió nada|
+| 4 | **docker compose down -v** y luego **docker compose up -d** | Mi albergue desapareció y la base de datos volvió al estado original |
 
-### Explicación do Paso 4
-No paso 4, engadir o *flag* `-v` ao comando `docker compose down` indica a Docker que elimine tamén os volumes nomeados asociados aos servizos (neste caso, `db_data`). Ao eliminar o volume, pérdese calquera modificación feita nos datos. Cando volvemos facer `up -d`, créase un volume totalmente novo e baleiro, o que provoca que a imaxe de PostgreSQL volva a executar os scripts de inicialización de `initdb/`, deixando a base de datos exactamente como estaba ao principio.
+**Porque el paso 4 es distinto**
+Básicamente porque al usar el parámetro "-v" estamos diciéndole a Docker que destruya también el volumen donde se están guardando los datos permanentemente. Al volver a levantar el proyecto con "up", Docker se encuentra sin datos, crea un volumen completamente nuevo y vacío, y eso provoca que los scripts SQL del principio se vuelvan a ejecutar desde cero.
